@@ -11,10 +11,6 @@ type Props = {
 export const TodoItem: React.FC<Props> = ({ todo, onDelete, loading }) => {
   const checkboxId = `todo-status-${todo.id}`;
 
-  const handleDelete = async () => {
-    await onDelete(todo.id);
-  };
-
   return (
     <div
       data-cy="Todo"
@@ -36,7 +32,7 @@ export const TodoItem: React.FC<Props> = ({ todo, onDelete, loading }) => {
         className="todo__status-label"
         aria-label="Toggle todo status"
       >
-        {/* */}
+        {/* Порожній лейбл */}
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
@@ -47,7 +43,8 @@ export const TodoItem: React.FC<Props> = ({ todo, onDelete, loading }) => {
         type="button"
         data-cy="TodoDelete"
         className="todo__remove"
-        onClick={handleDelete}
+        onClick={() => onDelete(todo.id)}
+        disabled={loading}
       >
         ×
       </button>

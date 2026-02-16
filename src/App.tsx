@@ -51,6 +51,7 @@ export const App: React.FC = () => {
       return false;
     }
 
+    hideError();
     const temp: Todo = {
       id: 0,
       userId: USER_ID,
@@ -79,33 +80,25 @@ export const App: React.FC = () => {
       return false;
     } finally {
       setIsAdding(false);
-
-      setTimeout(() => {
-        headerRef.current?.focus();
-      }, 0);
+      setTimeout(() => headerRef.current?.focus(), 0);
     }
   };
 
   const handleDelete = async (id: number) => {
     try {
       setLoadingId(id);
-
       await deleteTodo(id);
-
       setTodos(prev => prev.filter(todo => todo.id !== id));
     } catch {
       showError(ErrorMessage.Delete);
     } finally {
       setLoadingId(null);
-
       setTimeout(() => headerRef.current?.focus(), 0);
     }
   };
 
   const handleClearCompleted = () => {
-    const completed = todos.filter(todo => todo.completed);
-
-    completed.forEach(todo => handleDelete(todo.id));
+    todos.filter(todo => todo.completed).forEach(todo => handleDelete(todo.id));
   };
 
   const filteredTodos = useMemo(() => {
@@ -120,7 +113,6 @@ export const App: React.FC = () => {
   }, [todos, filter]);
 
   const activeCount = todos.filter(t => !t.completed).length;
-  const completedCount = todos.length - activeCount;
 
   if (!USER_ID) {
     return <UserWarning />;
@@ -133,7 +125,7 @@ export const App: React.FC = () => {
       <div className="todoapp__content">
         <Header ref={headerRef} onAdd={handleAdd} disabled={isAdding} />
 
-        {todos.length > 0 && (
+        {(todos.length > 0 || tempTodo) && (
           <TodoList
             todos={filteredTodos}
             tempTodo={tempTodo}
@@ -145,7 +137,7 @@ export const App: React.FC = () => {
         {todos.length > 0 && (
           <Footer
             activeCount={activeCount}
-            completedCount={completedCount}
+            completedCount={todos.length - activeCount}
             filter={filter}
             setFilter={setFilter}
             onClearCompleted={handleClearCompleted}
