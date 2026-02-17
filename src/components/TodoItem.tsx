@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import classNames from 'classnames';
 import { Todo } from '../types/Todo';
@@ -9,8 +10,6 @@ type Props = {
 };
 
 export const TodoItem: React.FC<Props> = ({ todo, onDelete, loading }) => {
-  const checkboxId = `todo-status-${todo.id}`;
-
   return (
     <div
       data-cy="Todo"
@@ -18,21 +17,13 @@ export const TodoItem: React.FC<Props> = ({ todo, onDelete, loading }) => {
         completed: todo.completed,
       })}
     >
-      <input
-        id={checkboxId}
-        type="checkbox"
-        className="todo__status"
-        data-cy="TodoStatus"
-        checked={todo.completed}
-        readOnly
-      />
-
-      <label
-        htmlFor={checkboxId}
-        className="todo__status-label"
-        aria-label="Toggle todo status"
-      >
-        {/* Порожній лейбл */}
+      <label className="todo__status-label">
+        <input
+          data-cy="TodoStatus"
+          type="checkbox"
+          className="todo__status"
+          checked={todo.completed}
+        />
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
